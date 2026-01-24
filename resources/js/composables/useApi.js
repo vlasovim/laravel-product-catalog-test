@@ -1,9 +1,10 @@
 import {ref} from 'vue';
 import axios from 'axios';
-import {useAuthApi} from "./useAuthApi.js";
 import {useApiToken} from "./useApiToken.js";
+import {useRouter} from "vue-router";
 
 export function useApi() {
+    const router = useRouter();
     const {getToken, resetToken} = useApiToken();
 
     const loading = ref(false);
@@ -30,7 +31,7 @@ export function useApi() {
         error => {
             if (error.response?.status === 401) {
                 resetToken();
-                window.location.href = '/login';
+                router.push('/login');
             }
             return Promise.reject(error);
         }

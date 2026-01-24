@@ -1,3 +1,14 @@
+<script setup>
+import {computed} from 'vue'
+import {useRoute} from 'vue-router'
+
+const route = useRoute();
+
+const activeIndex = computed(() => {
+    return route.path;
+});
+</script>
+
 <template>
     <el-container>
         <el-header>
@@ -7,7 +18,7 @@
                         mode="horizontal"
                         :ellipsis="false"
                         :router="true"
-                        :default-active="'/'"
+                        :default-active="activeIndex"
                     >
                         <el-menu-item index="/">Home</el-menu-item>
                         <el-menu-item index="/login">Login</el-menu-item>

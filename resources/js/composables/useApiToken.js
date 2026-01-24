@@ -16,7 +16,7 @@ export function useApiToken() {
     const isAuthenticated = computed(() => !!token.value);
 
     const getToken = () => token.value;
-    const setToken = (token) => token.value = token;
+    const setToken = (newToken) => token.value = newToken;
     const resetToken = () => {
         token.value = null;
     };

@@ -1,4 +1,3 @@
-import {computed} from 'vue';
 import {useApi} from './useApi';
 import {useApiToken} from "./useApiToken.js";
 
@@ -12,7 +11,7 @@ export function useAuthApi() {
 
             setToken(data.data.token);
 
-            return data;
+            return data.data;
         } catch (error) {
             throw error;
         }
@@ -27,9 +26,6 @@ export function useAuthApi() {
     }
 
     return {
-        isAuthenticated,
-        getToken,
-        resetToken,
         login,
         logout
     }
