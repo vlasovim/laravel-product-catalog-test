@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Product::with('category');
+        $query = Product::with('category')->orderBy('id');
 
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);

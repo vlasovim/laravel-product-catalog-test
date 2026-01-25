@@ -1,55 +1,48 @@
 <script setup>
-import {ref, onMounted} from 'vue'
-import {ElMessage} from 'element-plus'
-import {useProductsApi} from "../composables/useProductApi.js";
+import {ref, onMounted, watch} from 'vue'
+import CategorySelect from "../components/CategorySelect.vue";
+import {usePaginatedList} from "../composables/usePaginatedList.js";
 
-const {fetchProducts, loading, error} = useProductsApi();
+const {
+    items: products,
+    total,
+    currentPage,
+    pageSize,
+    pageSizes,
+    loading,
+    paginate,
+    updateFilters,
+    handlePageChange,
+    handleSizeChange,
+} = usePaginatedList({
+    url: 'products'
+});
 
-const products = ref([]);
-const total = ref(0);
-const currentPage = ref(1);
-const pageSize = ref(12);
-const pageSizes = [12, 30, 50];
+const categoryId = ref(null);
 
-const loadProducts = async (page = 1, limit = pageSize.value) => {
-    try {
-        const data = await fetchProducts({
-            page,
-            per_page: limit
-        });
-
-        products.value = data.items || [];
-        total.value = data.total || 0;
-        currentPage.value = page;
-        pageSize.value = limit;
-    } catch (err) {
-        ElMessage.error(error.value);
-    }
-}
-
-const handlePageChange = (page) => {
-    loadProducts(page, pageSize.value);
-}
-
-const handleSizeChange = (size) => {
-    loadProducts(1, size);
-}
+watch(categoryId, (newCategoryId) => {
+    updateFilters({
+        category_id: newCategoryId
+    });
+});
 
 onMounted(() => {
-    loadProducts();
-});
+    paginate();
+})
 </script>
 
 <template>
-    <div v-if="loading">
-        Loading...
-    </div>
-
-    <div v-else-if="products.length === 0">
+    <div v-if="!loading && products.length === 0">
         Nothing found
     </div>
 
-    <div v-else>
+    <div v-else v-loading="loading">
+        <el-row :gutter="20" class="filters">
+            <el-col :span="4">
+                <CategorySelect v-model="categoryId"/>
+            </el-col>
+        </el-row>
+
         <el-row :gutter="20">
             <el-col
                 v-for="product in products"
@@ -89,6 +82,7 @@ onMounted(() => {
         </el-row>
 
         <el-pagination
+            v-if="products.length > 0"
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
             :page-sizes="pageSizes"
@@ -106,6 +100,7 @@ onMounted(() => {
     text-decoration: none;
 }
 
+.filters,
 .el-card {
     margin-bottom: 20px;
 }

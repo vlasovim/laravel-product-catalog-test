@@ -1,20 +1,21 @@
 <script setup>
 import {onMounted, ref} from 'vue'
-import {useRoute} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import {useProductsApi} from "../composables/useProductApi.js";
 import {ElMessage} from "element-plus";
 
 const route = useRoute()
+const router = useRouter()
 const {fetchProduct, error} = useProductsApi()
 
 const product = ref(null)
-const loading = ref(true)
 
 const loadProduct = async (id) => {
     try {
         product.value = await fetchProduct(id);
     } catch (err) {
-        ElMessage.error(error.value);
+        router.push('/');
+        ElMessage.error('Product not found');
     }
 }
 

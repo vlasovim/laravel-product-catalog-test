@@ -1,9 +1,9 @@
-import {useApi} from './useApi';
-import {useApiToken} from "./useApiToken.js";
+import {useApiClient} from './useApiClient.js';
+import {useAuthState} from "./useAuthState.js";
 
 export function useAuthApi() {
-    const {post} = useApi();
-    const {setToken, resetToken} = useApiToken();
+    const {post} = useApiClient();
+    const {setToken, resetToken} = useAuthState();
 
     const login = async (credentials) => {
         try {
@@ -20,6 +20,8 @@ export function useAuthApi() {
     const logout = async () => {
         try {
             await post('/logout');
+        } catch (error) {
+            throw error;
         } finally {
             resetToken();
         }

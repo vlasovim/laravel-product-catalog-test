@@ -1,12 +1,22 @@
 <script setup>
 import {computed} from 'vue'
-import {useRoute} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
+import {useAuthState} from "../composables/useAuthState.js";
+import {useAuthApi} from "../composables/useAuthApi.js";
 
+const {isAuthenticated} = useAuthState();
+const {logout} = useAuthApi();
 const route = useRoute();
+const router = useRouter();
 
 const activeIndex = computed(() => {
     return route.path;
 });
+
+const handleLogout = async () => {
+    await logout();
+    await router.push('/');
+}
 </script>
 
 <template>
@@ -21,7 +31,12 @@ const activeIndex = computed(() => {
                         :default-active="activeIndex"
                     >
                         <el-menu-item index="/">Home</el-menu-item>
-                        <el-menu-item index="/login">Login</el-menu-item>
+                        <el-menu-item v-if="!isAuthenticated" index="/login">Login</el-menu-item>
+
+                        <template v-if="isAuthenticated">
+                            <el-menu-item index="/admin/products">Product management</el-menu-item>
+                            <el-menu-item index="" @click="handleLogout">Logout</el-menu-item>
+                        </template>
                     </el-menu>
                 </el-col>
             </el-row>
