@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
     nodejs \
-    npm
+    npm \
+    sqlite3
 
 RUN docker-php-ext-install pdo pdo_pgsql
 
@@ -22,4 +23,5 @@ RUN npm install && npm run build
 
 CMD php artisan key:generate \
  && php artisan migrate:fresh --seed --force \
+ && php artisan test --stop-on-failure \
  && php artisan serve --host=0.0.0.0 --port=8000
