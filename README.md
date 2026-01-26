@@ -13,7 +13,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd laravel-product-catalog-test
 ```
 
 Start (see Makefile)
