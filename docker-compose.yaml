@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-root}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: [ "CMD", "pg_isready", "-d", "${DB_DATABASE:-laravel-product-catalog-test}" ]
       interval: 10s
       timeout: 5s
       retries: 5
