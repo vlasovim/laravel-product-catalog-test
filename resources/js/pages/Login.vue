@@ -11,8 +11,8 @@ const loginFormRef = ref();
 const loading = ref(false);
 
 const form = reactive({
-    email: '',
-    password: '',
+    email: 'admin@example.com',
+    password: 'password',
 });
 
 const rules = {
