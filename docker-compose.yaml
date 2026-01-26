@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8085:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - laravel-product-catalog-test
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-laravel-product-catalog-test}
+      POSTGRES_USER: ${DB_USERNAME:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - laravel-product-catalog-test
+
+networks:
+  laravel-product-catalog-test:
